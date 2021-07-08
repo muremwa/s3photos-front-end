@@ -1,0 +1,56 @@
+.cloud {
+    width: 50%;
+    margin: auto;
+    margin-top: 2em;
+    margin-bottom: 400px;
+}
+
+.legend-form {
+    font-size: 2em;
+}
+
+.upload-btn  {
+    font-size: 2em;
+}
+
+.s3 {
+    font-family: "Freestyle Script", sans-serif, serif;
+    font-weight: bold;
+}
+
+label {
+    font-family: Tahoma, sans-serif;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.error {
+    font-size: 1.5em;
+}
+
+.img-to-up {
+    margin: auto;
+    width: 80%;
+    display: none;
+}
+
+.img-to-up img {
+    width: 100%;
+    margin-bottom: 2em;
+}
+
+@media screen and ( max-width: 991px){
+    .cloud {
+        width: 70%; 
+    }
+}
+@media screen and ( max-width: 507px){
+    .cloud {
+        width: 90%; 
+    }
+}
+@media screen and ( max-width: 350px){
+    .cloud {
+        width: 97%; 
+    }
+}
