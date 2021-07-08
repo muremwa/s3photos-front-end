@@ -1,0 +1,165 @@
+.every {
+    margin-top: 1em;
+    margin-bottom: 200px;
+}
+
+#no-posts {
+    padding: 3em 0 0 0;
+}
+
+.post {
+    width: 40%;
+    margin: auto;
+    background-color: rgb(234, 238, 241);
+    font-family: "Ink Free", "Courgette", sans-serif, serif;
+    margin-bottom: 1em;
+}
+
+.post-img {
+    width: 100%;
+    cursor: pointer;
+}
+
+.post-info {
+    padding: 1.5em;
+}
+
+.uploader-info {
+    height: 1.5em;
+}
+
+.vector {
+    height: 1.3em;
+}
+
+.uploader-name, .posted-time {
+    font-weight: bold;
+    margin-left: 1em;   
+    color: darkblue;
+    font-size: 1.5em;
+}
+
+.uploader-name:hover {
+    text-decoration: none;
+    color: rgb(23, 23, 36);
+}
+
+.posted-time {
+    font-size: 1.3em;
+}
+
+.caption {
+    margin-top: 1em;
+}
+
+.caption > p {
+    color: rgb(50, 50, 71);
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.h-m-l {
+    color: darkblue;
+    font-weight: bold;
+}
+
+.liking {
+    cursor: pointer;
+}
+
+.info-post {
+    display: flex;
+}
+
+.uploader {
+    width: 40%;
+}
+
+.date {
+    width: 60%;
+}
+
+.s3 {
+    font-family: "Freestyle Script", sans-serif, serif;
+    font-size: 2em;
+}
+
+@media screen and ( max-width: 1149px){
+    .uploader-name, .posted-time {
+        margin-left: 0.7em;   
+        font-size: 1.2em;
+    }
+}
+
+@media screen and ( max-width: 1078px){
+    .post {
+        width: 44%;
+    } 
+    .uploader-name, .posted-time {
+        margin-left: 0.5em;   
+        font-size: 1.1em;
+    }  
+}
+
+@media screen and ( max-width: 991px){
+    .post {
+        width: 46%;
+    }   
+}
+
+@media screen and ( max-width: 864px){
+    .post {
+        width: 50%;
+    }   
+    .caption > p {
+        font-size: 1.1em;
+    }
+}
+
+@media screen and ( max-width: 674px){
+    .post {
+        width: 60%;
+    }   
+    .caption > p {
+        font-size: 1.1em;
+    }
+}
+
+@media screen and ( max-width: 575px){
+    .post {
+        width: 80%;
+    }       
+}
+
+@media screen and ( max-width: 433px){
+    .post {
+        width: 100%;
+        padding: 0;
+        border: none;
+    }      
+}
+
+@media screen and ( max-width: 387px){    
+    .uploader-name, .posted-time {
+        margin-left: 0;   
+        font-size: 1em;
+    } 
+}
+
+@media screen and ( max-width: 333px){
+    .post {
+        width: 100%;
+    } 
+}
+
+@media screen and ( max-width: 325px){
+    .info-post {
+        display: inline;
+    } 
+        
+    .uploader, .date {
+        width: 100%;
+        text-align: center;
+        padding-top: 1em;
+    }
+}
