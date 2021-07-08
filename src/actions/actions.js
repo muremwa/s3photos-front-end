@@ -3,8 +3,10 @@ import ajax from './ajaxWrapper';
 import { loadPostsUrl, uploadPostUrl } from '../index';
 
 export function loadPosts (query) {
+    const url_ = query? `${loadPostsUrl}?post-query=${query}`: loadPostsUrl;
+
     const loadOptions = {
-        url: loadPostsUrl,
+        url: url_,
         responseType: 'json',
         error: () => {},
         success: (payload_) => {

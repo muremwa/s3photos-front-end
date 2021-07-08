@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 import store from '../store/PhotosStore';
 import { loadPosts } from '../actions/actions';
+import { searchQ } from './utils';
 
 import '../style/Home.css';
 import user from '../icons/user.svg';
@@ -12,12 +13,12 @@ import heart from '../icons/heart.svg';
 import heartFull from '../icons/heart_full.svg';
 
 
-function NoPostsAvailable () {
+function NoPostsAvailable (props) {
     return (
         <div className="container" id="no-posts">
             <div className="text-center">
-                <h2>No posts availble at this moment</h2>
-                <NavLink to='/upload/' className="btn btn-dark upload-btn" exact>Upload to <span className="s3">S3photos</span></NavLink>
+                <h2>No posts availble at this moment {props.from? `from ${props.from}`: void 0}</h2>
+                <NavLink to={`/upload/${props.from? `?as=${props.from}`: void 0}`} className="btn btn-dark upload-btn" exact>Upload to <span className="s3">S3photos</span> {props.from? `as ${props.from}`: void 0}</NavLink>
             </div>
         </div>
     )
@@ -77,13 +78,15 @@ function Post (props) {
 };
 
 
-export default function Home () {
+export default function Home (props) {
+    const location = useLocation();
     const [ rPosts, postsUpdate ] = useState(store.posts);
     const [ fetchPosts, fetchPostsChanger ] = useState(true);
     const posts = rPosts.map((x, i) => <Post key={i} {...x}/>)
-    
+    const searchs = searchQ(props.location.search);
+
     if (fetchPosts) {
-        loadPosts();
+        loadPosts(searchs.has('post-query')? searchs.get('post-query'): null);
         fetchPostsChanger(false);
     };
 
@@ -92,14 +95,17 @@ export default function Home () {
     };
 
     useEffect(() => {
-        store.on('change', loadNewPosts);
+        fetchPostsChanger(true);
+    }, [location])
 
+    useEffect(() => {
+        store.on('change', loadNewPosts);
         return () => store.removeListener('change', loadNewPosts);
     });
 
     return (
         <div className="every">
-            {posts.length > 0? posts: <NoPostsAvailable />}
+            {posts.length > 0? posts: <NoPostsAvailable from={searchs.has('post-query')? searchs.get('post-query'): null} />}
         </div>
     );
 };

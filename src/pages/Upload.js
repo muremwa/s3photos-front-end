@@ -2,6 +2,9 @@ import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
+
+import { searchQ } from './utils';
+
 import '../style/Upload.css';
 
 
@@ -51,7 +54,7 @@ function FileField (props) {
 
 
 function GenericTextField (props) {
-    const { error, name, help, textArea, x_name } = props;
+    const { error, name, help, textArea, x_name, dValue } = props;
 
     return (
         <div>
@@ -59,14 +62,17 @@ function GenericTextField (props) {
 
             <Form.Group>
                 <Form.Label>{x_name}</Form.Label>
-                <Form.Control as={textArea? 'textarea': 'input'} rows={textArea? 10: void 0} name={name}/>
+                <Form.Control value={dValue} disabled={dValue? true: false} as={textArea? 'textarea': 'input'} rows={textArea? 10: void 0} name={name}/>
             </Form.Group>
         </div>
     );
 };
 
 export default function Upload (props) {
+    const searches = searchQ(props.location.search);
+
     const captionField = {
+        dValue: null,
         x_name: 'Caption',
         name: 'caption',
         help: 'Tell others what the image is about',
@@ -74,6 +80,7 @@ export default function Upload (props) {
     };
 
     const uploaderNameField = {
+        dValue: searches.has('as')? searches.get('as'): null,
         x_name: 'Your name',
         name: 'your_name',
         help: 'Enter a name you would like to be known as',
@@ -100,7 +107,7 @@ export default function Upload (props) {
     return (
         <div className="cloud">
             <form method="POST" id="form-upload" encType="multipart/form-data" onSubmit={handleFormSubmit}>
-                <legend className="text-center legend-form">Upload an image to <span className="s3">S3photos</span></legend>
+                <legend className="text-center legend-form">Upload an image to <span className="s3">S3photos</span>{searches.has('as')? ` as ${searches.get('as')}`: void 0}</legend>
                 {errorsPresent? <FieldError classNameExtra="text-center error" message={'Please correct the errors below'} />: void 0}
                 <FileField error={errors.file} />
                 <hr />
