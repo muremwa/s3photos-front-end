@@ -1,0 +1,11 @@
+.navbar-brand {
+    font-family: "Freestyle Script", sans-serif, serif;
+    font-size: 4.7em;
+    width: 30%;
+    text-align: center;
+}
+
+.nav-item > a {
+    font-size: 1.2em;
+    font-family: "Segoe UI", Tahoma, "Lucida Sans", sans-serif, sans-serif;
+}
