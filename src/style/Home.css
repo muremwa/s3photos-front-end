@@ -79,11 +79,6 @@
     width: 60%;
 }
 
-.s3 {
-    font-family: "Freestyle Script", sans-serif, serif;
-    font-size: 2em;
-}
-
 @media screen and ( max-width: 1149px){
     .uploader-name, .posted-time {
         margin-left: 0.7em;   

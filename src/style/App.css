@@ -2,6 +2,11 @@ html {
     font-size: 12px;
 }
 
+.s3 {
+    font-family: "Freestyle Script", sans-serif, serif;
+    font-weight: bold;
+}
+
 @media screen and ( max-width: 991px){
     .navbar-brand {
         width: 80%;
