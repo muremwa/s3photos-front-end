@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
 import { NavLink } from 'react-router-dom';
+
+import store from '../store/PhotosStore';
+import { loadPosts } from '../actions/actions';
 
 import '../style/Home.css';
 import user from '../icons/user.svg';
@@ -33,7 +36,7 @@ function PostLike (props) {
     return (
         <div className="like">
             <img src={likeStatus? heartFull: heart} alt="like vector" className="vector liking" data-like-url="" onClick={handleLikeClick} />
-            <span className="h-m-l" name='count'>{_likes}</span>
+            <span className="h-m-l" name='count'> {_likes}</span>
         </div>
     );
 };
@@ -74,50 +77,29 @@ function Post (props) {
 };
 
 
-export default function Home (props) {
-    const p = [
-        {
-            id: 20,
-            likingUrl: '/',
-            uploadedBy: 'Muremwa',
-            imageFile: 'http://localhost:8000/media/photos/900828.jpg',
-            caption: 'For Nancy',
-            likes: 7,
-            cleanTime: 'July 08, 2021, 04:03 PM',
-        },
-        {
-            id: 20,
-            likingUrl: '/',
-            uploadedBy: 'Luke',
-            imageFile: 'http://localhost:8000/media/photos/91069_2.jpg',
-            caption: 'For Leia',
-            likes: 7,
-            cleanTime: 'July 08, 2021, 04:03 PM',
-        },
-        {
-            id: 20,
-            likingUrl: '/',
-            uploadedBy: 'Mr. White',
-            imageFile: 'http://localhost:8000/media/photos/bb.gif',
-            caption: 'For Jesee',
-            likes: 7,
-            cleanTime: 'July 08, 2021, 04:03 PM',
-        },
-        {
-            id: 20,
-            likingUrl: '/',
-            uploadedBy: 'Tony',
-            imageFile: 'http://localhost:8000/media/photos/empire_hospital_mafia_II.png',
-            caption: 'For Vito',
-            likes: 7,
-            cleanTime: 'July 08, 2021, 04:03 PM',
-        }
-    ]
-    const posts = p.map((x, i) => <Post key={i} {...x} liked={(i+1)%2 === 0}/>)
+export default function Home () {
+    const [ rPosts, postsUpdate ] = useState(store.posts);
+    const [ fetchPosts, fetchPostsChanger ] = useState(true);
+    const posts = rPosts.map((x, i) => <Post key={i} {...x}/>)
+    
+    if (fetchPosts) {
+        loadPosts();
+        fetchPostsChanger(false);
+    };
+
+    const loadNewPosts = () => {
+        postsUpdate(store.posts);
+    };
+
+    useEffect(() => {
+        store.on('change', loadNewPosts);
+
+        return () => store.removeListener('change', loadNewPosts);
+    });
 
     return (
         <div className="every">
             {posts.length > 0? posts: <NoPostsAvailable />}
         </div>
-    )
-}
+    );
+};
