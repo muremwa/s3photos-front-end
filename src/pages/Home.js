@@ -57,7 +57,7 @@ function Post (props) {
     };
 
     return (
-        <Card className="post">
+        <Card className="post" id={`post-${id}`}>
             <img src={imageFile} alt={`Post by ${uploadedBy}`}/>
             <div className="post-info">
                 <div className="info-post">

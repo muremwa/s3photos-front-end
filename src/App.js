@@ -28,7 +28,7 @@ function App() {
 				</div>
 				<Switch>
 					<Route path='/' exact render={(props) => <Home {...props} line={loadLine} />} />
-					<Route path='/upload/' exact component={Upload} />
+					<Route path='/upload/' exact render={(props) => <Upload {...props} line={loadLine} />} />
 				</Switch>
 			</BrowserRouter>
 		</div>

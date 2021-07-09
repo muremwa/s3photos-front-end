@@ -115,7 +115,7 @@ class PhotoStore extends EventEmitter {
             default:
                 break;
         }
-    }
+    };
 };
 
 

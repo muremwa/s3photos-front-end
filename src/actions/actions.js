@@ -25,3 +25,31 @@ export function loadPosts (query, end = () => {}) {
 
     ajax.get(loadOptions);
 };
+
+
+// upload a post
+export function uploadPost (form, uploading = () => {}, onSuccess = () => {}, end = () => {}, error = () => {}) {
+    const uploadOptions = {
+        url: uploadPostUrl,
+        responseType: 'json',
+        form: form,
+        error: error,
+        success: (payload_) => {
+            const response = payload_.response;
+            if (response.success) {
+                onSuccess();
+            } else {
+                const cleanErrors = {}
+                Object.keys(response.errors).forEach((key) => cleanErrors[key] = response.errors[key][0])
+                error(cleanErrors);
+                end();
+            };
+        },
+        uploadprogress: (loaded, total) => {
+            const pc = (loaded/total) * 100;
+            uploading(pc);
+        },
+    };
+
+    ajax.post(uploadOptions);
+};

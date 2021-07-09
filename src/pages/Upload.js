@@ -3,7 +3,9 @@ import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 
+import { uploadPost } from '../actions/actions';
 import { searchQ } from './utils';
+import { token } from '../index';
 
 import '../style/Upload.css';
 
@@ -62,7 +64,7 @@ function YourNameField (props) {
 
             <Form.Group>
                 <Form.Label>{x_name}</Form.Label>
-                <Form.Control defaultValue={dValue} disabled={dValue? true: false} name={name}/>
+                <Form.Control defaultValue={dValue} name={name}/>
             </Form.Group>
         </div>
     );
@@ -78,7 +80,7 @@ function CaptionField (props) {
 
             <Form.Group>
                 <Form.Label>{x_name}</Form.Label>
-                <Form.Control defaultValue={dValue} disabled={dValue? true: false} as='textarea' rows="10" name={name}/>
+                <Form.Control defaultValue={dValue} as='textarea' rows="10" name={name}/>
             </Form.Group>
         </div>
     );
@@ -86,13 +88,13 @@ function CaptionField (props) {
 
 export default function Upload (props) {
     const searches = searchQ(props.location.search);
+    const { line } = props;
 
     const captionField = {
         dValue: '',
         x_name: 'Caption',
         name: 'caption',
         help: 'Tell others what the image is about',
-        textArea: true
     };
 
     const uploaderNameField = {
@@ -100,7 +102,6 @@ export default function Upload (props) {
         x_name: 'Your name',
         name: 'your_name',
         help: 'Enter a name you would like to be known as',
-        textArea: false
     }
 
     const [ errors, errorsUpdate ] = useState({
@@ -111,19 +112,24 @@ export default function Upload (props) {
 
     const errorsPresent = Object.values(errors).some((error) => Boolean(error));
 
-    const handleFormSubmit = (e) => {
-        e.preventDefault();
-        errorsUpdate({
-            file: null,
-            caption: 'Too short',
-            your_name: 'Nest'
-        })
+    const onFormError = (errors = {}) => errorsUpdate(errors);
+
+    const endOfUpload = () => line(0, true);
+
+    const onSuccessUpload = (id) => props.history.push('/');
+
+    const uploadProgress = (pc) => line(pc, false);
+
+    const handleFormSubmit = (event_) => {
+        event_.preventDefault();
+        uploadPost(event_.target, uploadProgress, onSuccessUpload, endOfUpload, onFormError)
     };
 
     return (
         <div className="cloud">
             <form method="POST" id="form-upload" encType="multipart/form-data" onSubmit={handleFormSubmit}>
                 <legend className="text-center legend-form">Upload an image to <span className="s3">S3photos</span>{searches.has('as')? ` as ${searches.get('as')}`: void 0}</legend>
+                <input type="hidden" value={token} />
                 {errorsPresent? <FieldError classNameExtra="text-center error" message={'Please correct the errors below'} />: void 0}
                 <FileField error={errors.file} />
                 <hr />
