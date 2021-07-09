@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
 import { NavLink, useLocation } from 'react-router-dom';
 
 import store from '../store/PhotosStore';
@@ -14,11 +15,16 @@ import heartFull from '../icons/heart_full.svg';
 
 
 function NoPostsAvailable (props) {
+    const { error, reloader } = props
     return (
         <div className="container" id="no-posts">
             <div className="text-center">
                 <h2>No posts availble at this moment {props.from? `from ${props.from}`: void 0}</h2>
                 <NavLink to={`/upload/${props.from? `?as=${props.from}`: void 0}`} className="btn btn-dark upload-btn" exact>Upload to <span className="s3">S3photos</span> {props.from? `as ${props.from}`: void 0}</NavLink>
+            </div>
+            <br />
+            <div className="text-center">
+                <Button onClick={reloader} variant={error? "danger": "dark"}>{error? 'An error occured ': ''}Click to reload</Button>
             </div>
         </div>
     )
@@ -79,20 +85,30 @@ function Post (props) {
 
 
 export default function Home (props) {
+    const { line } = props;
     const location = useLocation();
     const [ rPosts, postsUpdate ] = useState(store.posts);
     const [ fetchPosts, fetchPostsChanger ] = useState(true);
+    const [ errorLoadingPosts, errorUpdate ] = useState(false);
     const posts = rPosts.map((x, i) => <Post key={i} {...x}/>)
     const searchs = searchQ(props.location.search);
 
+    const stopLoading = () => {
+        line(0, true);
+        errorUpdate(true);
+    }
+
     if (fetchPosts) {
-        loadPosts(searchs.has('post-query')? searchs.get('post-query'): null);
+        line(95, false);
+        loadPosts(searchs.has('post-query')? searchs.get('post-query'): null, stopLoading);
         fetchPostsChanger(false);
     };
 
     const loadNewPosts = () => {
         postsUpdate(store.posts);
     };
+
+    const reloadPosts = () => fetchPostsChanger(true);
 
     useEffect(() => {
         fetchPostsChanger(true);
@@ -105,7 +121,7 @@ export default function Home (props) {
 
     return (
         <div className="every">
-            {posts.length > 0? posts: <NoPostsAvailable from={searchs.has('post-query')? searchs.get('post-query'): null} />}
+            {posts.length > 0? posts: <NoPostsAvailable from={searchs.has('post-query')? searchs.get('post-query'): null} error={errorLoadingPosts} reloader={reloadPosts} />}
         </div>
     );
 };
