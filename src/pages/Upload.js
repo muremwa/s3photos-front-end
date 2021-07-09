@@ -53,8 +53,8 @@ function FileField (props) {
 };
 
 
-function GenericTextField (props) {
-    const { error, name, help, textArea, x_name, dValue } = props;
+function YourNameField (props) {
+    const { error, name, help, x_name, dValue } = props;
 
     return (
         <div>
@@ -62,7 +62,23 @@ function GenericTextField (props) {
 
             <Form.Group>
                 <Form.Label>{x_name}</Form.Label>
-                <Form.Control value={dValue} disabled={dValue? true: false} as={textArea? 'textarea': 'input'} rows={textArea? 10: void 0} name={name}/>
+                <Form.Control defaultValue={dValue} disabled={dValue? true: false} name={name}/>
+            </Form.Group>
+        </div>
+    );
+};
+
+
+function CaptionField (props) {
+    const { error, name, help, x_name, dValue } = props;
+
+    return (
+        <div>
+            {error? <FieldError message={error} />: <Alert variant='info'>{help}</Alert>}
+
+            <Form.Group>
+                <Form.Label>{x_name}</Form.Label>
+                <Form.Control defaultValue={dValue} disabled={dValue? true: false} as='textarea' rows="10" name={name}/>
             </Form.Group>
         </div>
     );
@@ -72,7 +88,7 @@ export default function Upload (props) {
     const searches = searchQ(props.location.search);
 
     const captionField = {
-        dValue: null,
+        dValue: '',
         x_name: 'Caption',
         name: 'caption',
         help: 'Tell others what the image is about',
@@ -80,7 +96,7 @@ export default function Upload (props) {
     };
 
     const uploaderNameField = {
-        dValue: searches.has('as')? searches.get('as'): null,
+        dValue: searches.has('as')? searches.get('as'): '',
         x_name: 'Your name',
         name: 'your_name',
         help: 'Enter a name you would like to be known as',
@@ -111,9 +127,9 @@ export default function Upload (props) {
                 {errorsPresent? <FieldError classNameExtra="text-center error" message={'Please correct the errors below'} />: void 0}
                 <FileField error={errors.file} />
                 <hr />
-                <GenericTextField {...captionField} error={errors.caption}/>
+                <CaptionField {...captionField} error={errors.caption}/>
                 <hr />
-                <GenericTextField {...uploaderNameField} error={errors.your_name}/>
+                <YourNameField {...uploaderNameField} error={errors.your_name}/>
                 <hr />
                 <Button type="submit" variant="dark">Upload to <span className="s3">S3photos</span></Button>
             </form>
