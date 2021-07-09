@@ -8,7 +8,7 @@ export function loadPosts (query, end = () => {}) {
     const loadOptions = {
         url: url_,
         responseType: 'json',
-        error: end,
+        error: () => end(true),
         success: (payload_) => {
             if (payload_.response) {
                 dispatcher.dispatch ({
@@ -19,7 +19,7 @@ export function loadPosts (query, end = () => {}) {
                     }
                 });
             };
-            end();
+            end(false);
         }
     };
 

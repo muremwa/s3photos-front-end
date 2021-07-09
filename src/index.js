@@ -9,6 +9,7 @@ const root = document.getElementById('root');
 
 export const loadPostsUrl = root.dataset.loadPosts;
 export const uploadPostUrl = root.dataset.uploadPost;
+export const token = root.dataset.token;
 
 ReactDOM.render(<React.StrictMode><App /></React.StrictMode>, root);
 

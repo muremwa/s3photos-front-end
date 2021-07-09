@@ -93,9 +93,9 @@ export default function Home (props) {
     const posts = rPosts.map((x, i) => <Post key={i} {...x}/>)
     const searchs = searchQ(props.location.search);
 
-    const stopLoading = () => {
+    const stopLoading = (error = false) => {
         line(0, true);
-        errorUpdate(true);
+        error? errorUpdate(true): void 0;
     }
 
     if (fetchPosts) {
