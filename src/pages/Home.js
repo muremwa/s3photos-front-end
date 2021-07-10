@@ -20,7 +20,7 @@ function NoPostsAvailable (props) {
         <div className="container" id="no-posts">
             <div className="text-center">
                 <h2>No posts availble at this moment {props.from? `from ${props.from}`: void 0}</h2>
-                <NavLink to={`/upload/${props.from? `?as=${props.from}`: void 0}`} className="btn btn-dark upload-btn" exact>Upload to <span className="s3">S3photos</span> {props.from? `as ${props.from}`: void 0}</NavLink>
+                <NavLink to={`${props.from? `/upload/?as=${props.from}`: '/upload/'}`} className="btn btn-dark upload-btn" exact>Upload to <span className="s3">S3photos</span> {props.from? `as ${props.from}`: void 0}</NavLink>
             </div>
             <br />
             <div className="text-center">
