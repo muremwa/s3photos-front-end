@@ -91,6 +91,14 @@ class PhotoStore extends EventEmitter {
         return result;
     };
 
+    getPostLikes (postId) {
+        const post = this.posts.find((post) => post.id === postId);
+        return post? {
+            likes: post.likes,
+            liked: post.liked
+        }: null;
+    };
+
     cleanPost (post = {}) {
         const liked = this.likedPosts.includes(post.id);
         const cleanPost_ = { liked }
@@ -110,6 +118,16 @@ class PhotoStore extends EventEmitter {
                 this.posts = Array.isArray(action.payload.posts)? action.payload.posts.map((post) => this.cleanPost(post)): [];
                 this.loaded = true;
                 this.emit('change');
+                break;
+
+            case 'LIKED_POST':
+                const post = this.posts.find((post) => post.id === action.payload.postId);
+                
+                if (post) {
+                    post.likes = action.payload.likes > -1? action.payload.likes: post.likes;
+                    post.liked = action.payload.status;
+                };
+                this.emit(`change_to_post_${action.payload.postId}`);
                 break;
         
             default:

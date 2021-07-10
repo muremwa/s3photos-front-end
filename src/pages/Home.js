@@ -4,8 +4,9 @@ import Button from 'react-bootstrap/Button';
 import { NavLink, useLocation } from 'react-router-dom';
 
 import store from '../store/PhotosStore';
-import { loadPosts } from '../actions/actions';
+import { loadPosts, likePost } from '../actions/actions';
 import { searchQ } from './utils';
+import { token } from '../index';
 
 import '../style/Home.css';
 import user from '../icons/user.svg';
@@ -31,20 +32,41 @@ function NoPostsAvailable (props) {
 };
 
 function PostLike (props) {
-    const { likes, likingUrl, liked} = props;
+    const { likes, likingUrl, liked, id } = props;
     const [ likeStatus, statusUpdater ] = useState(liked);
-    const [ _likes, likesUpdater ] = useState(likes)
+    const [ _likes, likesUpdater ] = useState(likes);
+    const likeBtnId = `like-btn-${id}`;
 
-    const handleLikeClick = () => {
-        likesUpdater(likeStatus? _likes - 1: _likes + 1);
-        statusUpdater(!likeStatus);
+    const submitLikeForm = () => {
+        const btn = document.getElementById(likeBtnId);
+        btn? btn.click(): void 0;
     };
 
+    const afterLike = () => {
+        const _data = store.getPostLikes(id);
+        if (_data !== null) {
+            statusUpdater(_data.liked);
+            likesUpdater(_data.likes);
+        };
+    };
+
+    const handleLikeClick = (event_) => {
+        event_.preventDefault();
+        likePost(likingUrl, event_.target, id);
+    };
+    
+    useEffect(() => {
+        store.on(`change_to_post_${id}`, afterLike);
+        return () => store.removeListener(`change_to_post_${id}`, afterLike);
+    });
+
     return (
-        <div className="like">
-            <img src={likeStatus? heartFull: heart} alt="like vector" className="vector liking" data-like-url="" onClick={handleLikeClick} />
+        <form className="like" onSubmit={handleLikeClick}>
+            <input type="hidden" name="csrfmiddlewaretoken" value={token}/>
+            <img type="image" src={likeStatus? heartFull: heart} alt="like vector" className="vector liking" onClick={submitLikeForm} />
+            <input type="submit" hidden id={likeBtnId} />
             <span className="h-m-l" name='count'> {_likes}</span>
-        </div>
+        </form>
     );
 };
 
@@ -90,7 +112,7 @@ export default function Home (props) {
     const [ rPosts, postsUpdate ] = useState(store.posts);
     const [ fetchPosts, fetchPostsChanger ] = useState(true);
     const [ errorLoadingPosts, errorUpdate ] = useState(false);
-    const posts = rPosts.map((x, i) => <Post key={i} {...x}/>)
+    const posts = rPosts.map((post_, i) => <Post key={i} {...post_}/>)
     const searchs = searchQ(props.location.search);
 
     const stopLoading = (error = false) => {

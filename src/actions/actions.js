@@ -53,3 +53,28 @@ export function uploadPost (form, uploading = () => {}, onSuccess = () => {}, en
 
     ajax.post(uploadOptions);
 };
+
+// like a post
+export function likePost (_url, form, postId) {
+    const likeOptions = {
+        url: _url,
+        responseType: 'json',
+        form: form,
+        error: () => {},
+        success: (payload_) => {
+            const response = payload_.response;
+            const responseKeys = Object.keys(response);
+
+            dispatcher.dispatch ({
+                type: 'LIKED_POST',
+                payload: {
+                    postId,
+                    status: responseKeys.includes('liked')? response.liked: false,
+                    likes: responseKeys.includes('likes')? response.likes: -1 
+                }
+            });
+        }
+    };
+
+    ajax.post(likeOptions);
+};
