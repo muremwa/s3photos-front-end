@@ -1,4 +1,5 @@
-import { NavLink, useHistory } from 'react-router-dom';
+import { useEffect } from 'react';
+import { NavLink, useLocation, useHistory } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form'
@@ -8,6 +9,8 @@ import '../style/topBar.css';
 
 export default function TopBar (props) {
     const history = useHistory();
+    const location = useLocation();
+    const navId = 'top-nav';
 
     const handleSearch = (event_) => {
         event_.preventDefault();
@@ -15,8 +18,13 @@ export default function TopBar (props) {
         history.push(`/?post-query=${term}`);
     };
 
+    useEffect(() => {
+        const nav = document.getElementById(navId);
+        nav? nav.scrollIntoView(): void 0;
+    }, [location])
+
     return (
-        <Navbar bg="dark" variant='dark' expand="lg">
+        <Navbar bg="dark" variant='dark' expand="lg" id={navId}>
             <Navbar.Brand href="/">S3photos</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
