@@ -55,12 +55,12 @@ export function uploadPost (form, uploading = () => {}, onSuccess = () => {}, en
 };
 
 // like a post
-export function likePost (_url, form, postId) {
+export function likePost (_url, form, postId, endOfLike) {
     const likeOptions = {
         url: _url,
         responseType: 'json',
         form: form,
-        error: () => {},
+        error: endOfLike,
         success: (payload_) => {
             const response = payload_.response;
             const responseKeys = Object.keys(response);
@@ -73,6 +73,7 @@ export function likePost (_url, form, postId) {
                     likes: responseKeys.includes('likes')? response.likes: -1 
                 }
             });
+            endOfLike();
         }
     };
 

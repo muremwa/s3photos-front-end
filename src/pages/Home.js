@@ -32,7 +32,7 @@ function NoPostsAvailable (props) {
 };
 
 function PostLike (props) {
-    const { likes, likingUrl, liked, id } = props;
+    const { likes, likingUrl, liked, id, line } = props;
     const [ likeStatus, statusUpdater ] = useState(liked);
     const [ _likes, likesUpdater ] = useState(likes);
     const likeBtnId = `like-btn-${id}`;
@@ -52,7 +52,8 @@ function PostLike (props) {
 
     const handleLikeClick = (event_) => {
         event_.preventDefault();
-        likePost(likingUrl, event_.target, id);
+        line(97, false);
+        likePost(likingUrl, event_.target, id, () => line(0, true));
     };
     
     useEffect(() => {
@@ -72,7 +73,7 @@ function PostLike (props) {
 
 
 function Post (props) {
-    const { caption, imageFile, likes, likingUrl, cleanTime, uploadedBy, id, liked } = props;
+    const { caption, imageFile, likes, likingUrl, cleanTime, uploadedBy, id, liked, line } = props;
 
     const _cleanTime = (time) => {
         return time.replace(/\s0/g, ' ').replace(/AM/, 'a.m.').replace(/PM/, 'p.m.');
@@ -99,7 +100,7 @@ function Post (props) {
                     <p>{caption}</p>
                 </div>
 
-                <PostLike {...{likes, likingUrl, id, liked}} />
+                <PostLike {...{likes, likingUrl, id, liked, line }} />
             </div>
         </Card>
     );
@@ -112,7 +113,7 @@ export default function Home (props) {
     const [ rPosts, postsUpdate ] = useState(store.posts);
     const [ fetchPosts, fetchPostsChanger ] = useState(true);
     const [ errorLoadingPosts, errorUpdate ] = useState(false);
-    const posts = rPosts.map((post_, i) => <Post key={i} {...post_}/>)
+    const posts = rPosts.map((post_, i) => <Post key={i} {...post_} {...{line}}/>)
     const searchs = searchQ(props.location.search);
 
     const stopLoading = (error = false) => {

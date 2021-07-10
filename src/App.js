@@ -7,6 +7,7 @@ import TopBar from './pages/TopBar';
 import Home from './pages/Home';
 import Upload from './pages/Upload';
 
+
 function App() {
 	const loadLine = (pc = 0, kill = false) => {
 		const line = document.getElementById("line-load");
