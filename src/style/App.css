@@ -22,7 +22,7 @@ html {
     height: 100%;
     background-color: blue;
     transition: 0.5s;
-    width: 50%;
+    width: 0;
 }
 
 

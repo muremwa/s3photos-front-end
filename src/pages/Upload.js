@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 
-import { uploadPost } from '../actions/actions';
+import { uploadPost, uploadConnection } from '../actions/actions';
 import { searchQ } from './utils';
 import { token } from '../index';
 
@@ -86,7 +86,7 @@ function CaptionField (props) {
     );
 };
 
-export default function Upload (props) {
+function UploadForm (props) {
     const searches = searchQ(props.location.search);
     const { line } = props;
 
@@ -129,7 +129,7 @@ export default function Upload (props) {
         <div className="cloud">
             <form method="POST" id="form-upload" encType="multipart/form-data" onSubmit={handleFormSubmit}>
                 <legend className="text-center legend-form">Upload an image to <span className="s3">S3photos</span>{searches.has('as')? ` as ${searches.get('as')}`: void 0}</legend>
-                <input type="hidden" value={token} />
+                <input type="hidden" value={token} name="csrfmiddlewaretoken"/>
                 {errorsPresent? <FieldError classNameExtra="text-center error" message={'Please correct the errors below'} />: void 0}
                 <FileField error={errors.file} />
                 <hr />
@@ -141,4 +141,50 @@ export default function Upload (props) {
             </form>
         </div>
     )
+};
+
+function NoConnection (props) {
+    const { connection } = props;
+
+    return (
+        <div className="text-center">
+            <h1>{connection? '': 'No Connection available'}</h1>
+            {!connection? <Button onClick={props.reload}>Click to retry</Button>: null}
+        </div>
+    )
 }
+
+
+export default function Upload (props) {
+    const [ connectedReq, connectedReqChanger ] = useState(false);
+    const [ connection, connectionChanger ] = useState(true);
+
+    const doneLoading = () => props.line(0, true);
+
+    const success = () => {
+        connectedReqChanger(true);
+        connectionChanger(true);
+    };
+
+    const error = () => {
+        connectedReqChanger(true);
+        connectionChanger(false);
+    }
+
+    const reload = () => connectedReqChanger(false);
+
+    if (!connectedReq) {
+        props.line(98, false);
+        uploadConnection(doneLoading, success, error);
+    };
+
+    const show = () => {
+        if (connectedReq) {
+            return connection? <UploadForm {...props} />: <NoConnection connection={false} {...{reload}}/>
+        } else {
+            return <NoConnection connection={true} />
+        };
+    };
+
+    return show();
+};

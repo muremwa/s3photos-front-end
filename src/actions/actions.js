@@ -27,13 +27,35 @@ export function loadPosts (query, end = () => {}) {
 };
 
 
+// check upload options
+export function uploadConnection (end = () => {}, successCallBack = () => {}, errorCallBack = () => {}) {
+    const uploadOptions = {
+        url: uploadPostUrl,
+        responseType: 'json',
+        error: () => {
+            errorCallBack();
+            end();
+        },
+        success: () => {
+            successCallBack();
+            end();
+        }
+    }
+
+    ajax.get(uploadOptions);
+};
+
+
 // upload a post
 export function uploadPost (form, uploading = () => {}, onSuccess = () => {}, end = () => {}, error = () => {}) {
     const uploadOptions = {
         url: uploadPostUrl,
         responseType: 'json',
         form: form,
-        error: error,
+        error: () => {
+            error({'e': true});
+            end();
+        },
         success: (payload_) => {
             const response = payload_.response;
             if (response.success) {
