@@ -12,12 +12,12 @@ import '../style/Upload.css';
 
 function FieldError (props) {
     return (
-        <Alert className={props.classNameExtra? props.classNameExtra: ''} variant="warning">{props.message}</Alert>
+        <Alert id={props.id? props.id: ''} className={props.classNameExtra? props.classNameExtra: ''} variant="warning">{props.message}</Alert>
     );
 };
 
 function FileField (props) {
-    const { error } = props;
+    const { error, me } = props;
     const alertId = 'file-alert';
     const imgDivId = 'image-to-upload'
     const imgId = 'image-to-call'
@@ -33,9 +33,11 @@ function FileField (props) {
         };
 
         reader.readAsDataURL(event_.target.files[0]);
-        imgDiv.style.display = 'block';
-        alert.style.display = 'none';
+        imgDiv? imgDiv.style.display = 'block': void 0;
+        alert? alert.style.display = 'none': void 0;
     };
+
+    me === null? void 0: me(alertId);
 
     return (
         <div>
@@ -48,7 +50,7 @@ function FileField (props) {
 
             <Form.Group>
                 <Form.Label>File</Form.Label>
-                <Form.File name='file' accept='image/*' className="form-control" onChange={handleFileSelect} />
+                <Form.File name='file' accept='image/*' className="form-control" onChange={handleFileSelect} required />
             </Form.Group>
         </div>
     );
@@ -56,15 +58,18 @@ function FileField (props) {
 
 
 function YourNameField (props) {
-    const { error, name, help, x_name, dValue } = props;
+    const { error, name, help, x_name, dValue, me } = props;
+    const errorId = 'your-name-error';
+
+    me === null? void 0: me(errorId);
 
     return (
         <div>
-            {error? <FieldError message={error} />: <Alert variant='info'>{help}</Alert>}
+            {error? <FieldError message={error} id={errorId} />: <Alert variant='info'>{help}</Alert>}
 
             <Form.Group>
                 <Form.Label>{x_name}</Form.Label>
-                <Form.Control defaultValue={dValue} name={name}/>
+                <Form.Control defaultValue={dValue} name={name} required/>
             </Form.Group>
         </div>
     );
@@ -72,23 +77,39 @@ function YourNameField (props) {
 
 
 function CaptionField (props) {
-    const { error, name, help, x_name, dValue } = props;
+    const { error, name, help, x_name, dValue, me } = props;
+    const errorId = 'caption-error-id';
+
+    me === null? void 0: me(errorId);
 
     return (
         <div>
-            {error? <FieldError message={error} />: <Alert variant='info'>{help}</Alert>}
+            {error? <FieldError id={errorId} message={error} />: <Alert variant='info'>{help}</Alert>}
 
             <Form.Group>
                 <Form.Label>{x_name}</Form.Label>
-                <Form.Control defaultValue={dValue} as='textarea' rows="10" name={name}/>
+                <Form.Control defaultValue={dValue} as='textarea' rows="10" name={name} required />
             </Form.Group>
+        </div>
+    );
+};
+
+
+function MainError (props) {
+    props.me? props.me(props.id): void 0;
+
+    return (
+        <div className="text-center">
+            <FieldError id={props.id} classNameExtra='text-center error' message={props.unexpected? 'An unexpected error occurred': 'Please correct the errors below'} />
+            {props.unexpected? <Button onClick={props.reload} variant='dark'>Refresh to try again</Button>: null}
         </div>
     );
 };
 
 function UploadForm (props) {
     const searches = searchQ(props.location.search);
-    const { line } = props;
+    const { line, reload } = props;
+    const mainErrorId = 'main-error-id';
 
     const captionField = {
         dValue: '',
@@ -107,7 +128,8 @@ function UploadForm (props) {
     const [ errors, errorsUpdate ] = useState({
         file: null,
         caption: null,
-        your_name: null
+        your_name: null,
+        unexpected: false
     });
 
     const errorsPresent = Object.values(errors).some((error) => Boolean(error));
@@ -125,17 +147,38 @@ function UploadForm (props) {
         uploadPost(event_.target, uploadProgress, onSuccessUpload, endOfUpload, onFormError)
     };
 
+    const errorMaster = (() => {
+        if (errors.unexpected) {
+            return 0;
+        } else if (errors.file) {
+            return 1;
+        } else if (errors.caption) {
+            return 2;
+        } else if (errors.your_name) {
+            return 3;
+        } else {
+            return null;
+        };
+    })();
+
+    const errorPaint = (id) => {
+        const errorDiv = document.getElementById(id);
+        errorDiv? errorDiv.scrollIntoView(): void 0;
+    };
+
+    errorMaster === 0? errorPaint(mainErrorId): void 0;
+
     return (
         <div className="cloud">
             <form method="POST" id="form-upload" encType="multipart/form-data" onSubmit={handleFormSubmit}>
                 <legend className="text-center legend-form">Upload an image to <span className="s3">S3photos</span>{searches.has('as')? ` as ${searches.get('as')}`: void 0}</legend>
                 <input type="hidden" value={token} name="csrfmiddlewaretoken"/>
-                {errorsPresent? <FieldError classNameExtra="text-center error" message={'Please correct the errors below'} />: void 0}
-                <FileField error={errors.file} />
+                {errorsPresent? <MainError id={mainErrorId} unexpected={errors.unexpected} me={errorMaster === 0? errorPaint: null} {...{reload}} />: void 0}
+                <FileField error={errors.file} me={errorMaster === 1? errorPaint: null} />
                 <hr />
-                <CaptionField {...captionField} error={errors.caption}/>
+                <CaptionField {...captionField} error={errors.caption} me={errorMaster === 2? errorPaint: null}/>
                 <hr />
-                <YourNameField {...uploaderNameField} error={errors.your_name}/>
+                <YourNameField {...uploaderNameField} error={errors.your_name} me={errorMaster === 3? errorPaint: null}/>
                 <hr />
                 <Button type="submit" variant="dark">Upload to <span className="s3">S3photos</span></Button>
             </form>
@@ -180,7 +223,7 @@ export default function Upload (props) {
 
     const show = () => {
         if (connectedReq) {
-            return connection? <UploadForm {...props} />: <NoConnection connection={false} {...{reload}}/>
+            return connection? <UploadForm {...props} {...{reload}} />: <NoConnection connection={false} {...{reload}}/>
         } else {
             return <NoConnection connection={true} />
         };

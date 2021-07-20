@@ -53,7 +53,7 @@ export function uploadPost (form, uploading = () => {}, onSuccess = () => {}, en
         responseType: 'json',
         form: form,
         error: () => {
-            error({'e': true});
+            error({'unexpected': true});
             end();
         },
         success: (payload_) => {
