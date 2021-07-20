@@ -142,6 +142,8 @@ export default function Home (props) {
         return () => store.removeListener('change', loadNewPosts);
     });
 
+    document.title = "S3photos | all posts"
+
     return (
         <div className="every">
             {posts.length > 0? posts: <NoPostsAvailable from={searchs.has('post-query')? searchs.get('post-query'): null} error={errorLoadingPosts} reloader={reloadPosts} />}

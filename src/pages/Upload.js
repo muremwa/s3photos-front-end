@@ -228,6 +228,7 @@ export default function Upload (props) {
             return <NoConnection connection={true} />
         };
     };
+    document.title = "S3photos | upload"
 
     return show();
 };
