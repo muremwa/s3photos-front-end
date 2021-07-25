@@ -6,13 +6,9 @@ import { NavLink, useLocation } from 'react-router-dom';
 import store from '../store/PhotosStore';
 import { loadPosts, likePost } from '../actions/actions';
 import { searchQ } from './utils';
-import { token } from '../index';
+import { token, icons } from '../index';
 
 import '../style/Home.css';
-import user from '../icons/user.svg';
-import clock from '../icons/clock.svg';
-import heart from '../icons/heart.svg';
-import heartFull from '../icons/heart_full.svg';
 
 
 function NoPostsAvailable (props) {
@@ -64,7 +60,7 @@ function PostLike (props) {
     return (
         <form className="like" onSubmit={handleLikeClick}>
             <input type="hidden" name="csrfmiddlewaretoken" value={token}/>
-            <img type="image" src={likeStatus? heartFull: heart} alt="like vector" className="vector liking" onClick={submitLikeForm} />
+            <img type="image" src={likeStatus? icons.heartFull: icons.heart} alt="like vector" className="vector liking" onClick={submitLikeForm} />
             <input type="submit" hidden id={likeBtnId} />
             <span className="h-m-l" name='count'> {_likes}</span>
         </form>
@@ -86,12 +82,12 @@ function Post (props) {
                 <div className="info-post">
                     <div className="uploader">
                         <span className="uploader-info">
-                            <img className="user-vector vector" src={user} alt="user-vector" />
+                            <img className="user-vector vector" src={icons.user} alt="user-vector" />
                             <NavLink to={`/?post-query=${uploadedBy}`} className="uploader-name">{uploadedBy}</NavLink>
                         </span>
                     </div>
                     <div className="date">
-                        <img src={clock} alt="clock-vector" className="clock-vector vector" />
+                        <img src={icons.clock} alt="clock-vector" className="clock-vector vector" />
                         <span className="posted-time">{_cleanTime(cleanTime)}</span>
                     </div>
                 </div>

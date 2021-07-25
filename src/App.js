@@ -22,7 +22,7 @@ function App() {
 
 	return (
 		<div>
-			<BrowserRouter>
+			<BrowserRouter basename='/open/'>
 				<TopBar />
 				<div id="load-line">
 					<div id="line-load"></div>

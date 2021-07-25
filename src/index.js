@@ -10,6 +10,12 @@ const root = document.getElementById('root');
 export const loadPostsUrl = root.dataset.loadPosts;
 export const uploadPostUrl = root.dataset.uploadPost;
 export const token = root.dataset.token;
+export const icons = {
+    user: root.dataset.userIcon,
+    clock: root.dataset.timeIcon,
+    heart: root.dataset.heartIcon,
+    heartFull: root.dataset.heartFullIcon
+};
 
 ReactDOM.render(<React.StrictMode><App /></React.StrictMode>, root);
 
