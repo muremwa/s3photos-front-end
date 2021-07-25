@@ -6,6 +6,7 @@ import './style/App.css';
 import TopBar from './pages/TopBar';
 import Home from './pages/Home';
 import Upload from './pages/Upload';
+import Error404 from './pages/Error404';
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
 				<Switch>
 					<Route path='/' exact render={(props) => <Home {...props} line={loadLine} />} />
 					<Route path='/upload/' exact render={(props) => <Upload {...props} line={loadLine} />} />
+					<Route component={Error404} />
 				</Switch>
 			</BrowserRouter>
 		</div>
