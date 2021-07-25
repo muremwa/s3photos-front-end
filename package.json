@@ -1,6 +1,6 @@
 {
   "name": "s3photosf",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "homepage": "/open/",
   "proxy": "http://127.0.0.1:8000/",
   "private": true,
