@@ -109,7 +109,7 @@ export default function Home (props) {
     const [ rPosts, postsUpdate ] = useState(store.posts);
     const [ fetchPosts, fetchPostsChanger ] = useState(true);
     const [ errorLoadingPosts, errorUpdate ] = useState(false);
-    const posts = rPosts.map((post_, i) => <Post key={i} {...post_} {...{line}}/>)
+    const posts = rPosts.map((post_, i) => <Post key={`${post_.id}-${i}`} {...post_} {...{line}}/>)
     const searchs = searchQ(props.location.search);
 
     const stopLoading = (error = false) => {
