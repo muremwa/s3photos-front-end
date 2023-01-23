@@ -9,10 +9,9 @@
 
 .post {
     width: 40%;
-    margin: auto;
     background-color: rgb(234, 238, 241);
     font-family: "Ink Free", "Courgette", sans-serif, serif;
-    margin-bottom: 1em;
+    margin: auto auto 1em;
 }
 
 .post-img {

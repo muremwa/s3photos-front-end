@@ -32,7 +32,7 @@ export default function TopBar (props) {
 
     return (
         <Navbar bg="dark" variant='dark' expand="lg" id={navId}>
-            <Navbar.Brand href="/">S3photos</Navbar.Brand>
+            <Navbar.Brand className='s3' href="/">S3photos</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
             <Navbar.Collapse id="basic-navbar-nav">

@@ -18,7 +18,7 @@ function App() {
 			if (pc < 101 && pc > -1) {
 				line? line.style.width = `${pc}%`: void 0;
 			}
-		};
+		}
 	};
 
 	return (
