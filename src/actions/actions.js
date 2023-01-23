@@ -24,7 +24,7 @@ export function loadPosts (query, end = () => {}) {
     };
 
     ajax.get(loadOptions);
-};
+}
 
 
 // check upload options
@@ -43,11 +43,18 @@ export function uploadConnection (end = () => {}, successCallBack = () => {}, er
     }
 
     ajax.get(uploadOptions);
-};
+}
 
 
 // upload a post
-export function uploadPost (form, uploading = () => {}, onSuccess = () => {}, end = () => {}, error = () => {}) {
+/**
+ * @param {HTMLFormElement} form
+ * @param {(progress: number) => void} uploading
+ * @param {() => void} onSuccess
+ * @param {() => void} end
+ * @param {(error: any) => void} error
+ * */
+export function uploadPost (form, uploading, onSuccess, end, error) {
     const uploadOptions = {
         url: uploadPostUrl,
         responseType: 'json',
@@ -74,7 +81,7 @@ export function uploadPost (form, uploading = () => {}, onSuccess = () => {}, en
     };
 
     ajax.post(uploadOptions);
-};
+}
 
 // like a post
 export function likePost (_url, form, postId, endOfLike) {
@@ -100,4 +107,4 @@ export function likePost (_url, form, postId, endOfLike) {
     };
 
     ajax.post(likeOptions);
-};
+}

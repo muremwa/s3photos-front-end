@@ -14,7 +14,7 @@ function FieldError (props) {
     return (
         <Alert id={props.id? props.id: ''} className={props.classNameExtra? props.classNameExtra: ''} variant="warning">{props.message}</Alert>
     );
-};
+}
 
 function FileField (props) {
     const { error, me } = props;
@@ -30,6 +30,7 @@ function FileField (props) {
 
         reader.onload = (e) => {
             img.src = e.target.result;
+            imgDiv.scrollIntoView({ block: "center", behavior: "smooth" });
         };
 
         reader.readAsDataURL(event_.target.files[0]);
@@ -54,7 +55,7 @@ function FileField (props) {
             </Form.Group>
         </div>
     );
-};
+}
 
 
 function YourNameField (props) {
@@ -73,7 +74,7 @@ function YourNameField (props) {
             </Form.Group>
         </div>
     );
-};
+}
 
 
 function CaptionField (props) {
@@ -92,7 +93,7 @@ function CaptionField (props) {
             </Form.Group>
         </div>
     );
-};
+}
 
 
 function MainError (props) {
@@ -104,7 +105,7 @@ function MainError (props) {
             {props.unexpected? <Button onClick={props.reload} variant='dark'>Refresh to try again</Button>: null}
         </div>
     );
-};
+}
 
 function UploadForm (props) {
     const searches = searchQ(props.location.search);
@@ -138,7 +139,7 @@ function UploadForm (props) {
 
     const endOfUpload = () => line(0, true);
 
-    const onSuccessUpload = (id) => props.history.push('/');
+    const onSuccessUpload = () => props.history.push('/');
 
     const uploadProgress = (pc) => line(pc, false);
 
@@ -158,7 +159,7 @@ function UploadForm (props) {
             return 3;
         } else {
             return null;
-        };
+        }
     })();
 
     const errorPaint = (id) => {
@@ -184,7 +185,7 @@ function UploadForm (props) {
             </form>
         </div>
     )
-};
+}
 
 function NoConnection (props) {
     const { connection } = props;
@@ -219,14 +220,14 @@ export default function Upload (props) {
     if (!connectedReq) {
         props.line(98, false);
         uploadConnection(doneLoading, success, error);
-    };
+    }
 
     const show = () => {
         if (connectedReq) {
             return connection? <UploadForm {...props} {...{reload}} />: <NoConnection connection={false} {...{reload}}/>
         } else {
             return <NoConnection connection={true} />
-        };
+        }
     };
     document.title = "S3photos | upload"
 
